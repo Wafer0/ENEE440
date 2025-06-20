@@ -1,0 +1,116 @@
+# Test Script - Device 6 Timer (TIM2)
+#
+# Note: An oscilloscope is recommended to verify correct timer functionality (e.g., PWM, PFM, pulse widths).
+# All Timer (TIM2) functions for Device 6 output on pin PA5.
+# =====================================================
+# Device 01: User LED Functions (example, not main focus)
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+:0100FF
+# =====================================================
+# Device 06: Timer (TIM2) Functions
+# =====================================================
+# Function :0600 (Initialize Timer) - Initializes TIM2 peripheral. Must be called before other TIM2 commands. 
+:0600FA
+# =====================================================
+# Function :0606 & :0607 (Triggered Control)
+# These commands configure a TIM2 function to execute upon an external trigger event on PA1.
+# To test, first arm the trigger with a command. Then, trigger PA1 and observe the LED to see the command execute.
+# =====================================================
+# Function :0606 (Initialize Trigger for TIM2 on PA1)
+:0606F4
+# --- Test Sequence for Triggered Control (:0607) ---
+# Test 1: Arm Triggered PWM
+# SubCmd=0x01 (PWM), ARR=0x001E847F (1,999,999 ticks, ~2s period @1MHz), Duty=0x0019 (25%) 
+:060701001E847F0019B8
+# Test 2: Arm Triggered PFM
+# SubCmd=0x02 (PFM), Target Freq=0x00000001 (1 Hz)
+:06070200000001F0
+# Test 3: Arm Triggered Simple Pulse (SP)
+# SubCmd=0x03 (Simple Pulse), Pulse Width=0x001E847F (1,999,999 ticks, ~2s pulse @1MHz) 
+:060703001E847FCF
+# Test 4: Arm Triggered Pulse Width (PW)
+# SubCmd=0x04 (Pulse Width / OPM), Delay=0x001E847F (1,999,999 ticks, ~2s delay @1MHz), Width=0x001E847F (1,999,999 ticks, ~2s pulse @1MHz)
+:060704001E847F001E847FAD
+# Test 5: Arm Triggered Pulse Frequency (PF)
+# SubCmd=0x05 (Pulse Frequency), Target Freq=0x00000001 (1 Hz)
+:06070500000001ED
+# =====================================================
+# Function :0601 (PWM On - Pulse Width Modulation) 
+# =====================================================
+# Test 1: PWM On - ARR=0x001E847F (1,999,999 ticks, ~2s period @1MHz), Duty=0x0019 (25%) 
+:0601001E847F0019BF
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 2: PWM On - ARR=0x001E847F (1,999,999 ticks, ~2s period @1MHz), Duty=0x0032 (50%)
+:0601001E847F0032A6
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 3: PWM On - ARR=0x00F423F0 (25,580,016 ticks), Duty=0x004B (75%)
+:060100F423F0004BA7
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# =====================================================
+# Function :0602 (PFM On - Pulse Frequency Modulation) Duty cycle fixed at 50%. 
+# =====================================================
+# Test 1: PFM On - Target Freq=0x00000001 (1 Hz)
+:060200000001F7
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 2: PFM On - Target Freq=0x00000064 (100 Hz)
+:06020000006494
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 3: PFM On - Target Freq=0x000003E8 (1000 Hz)
+:0602000003E80D
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# =====================================================
+# Function :0603 (Simple Pulse On) - Generates a single pulse. 
+# =====================================================
+# Test 1: Simple Pulse - Width=0x001E847F (1,999,999 ticks, ~2s pulse @1MHz) 
+#Checksum 0x00 applies to DeviceID, CmdID, and 4 data bytes (001E847F). 
+:0603001E847FD6
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 2: Simple Pulse - Width=0x000F423F (999,999 ticks, ~1s pulse @1MHz) 
+:0603000F423F67
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 3: Simple Pulse - Width=0x0007A11F (499,999 ticks, ~0.5s pulse @1MHz)
+:06030007A11F30
+# Function :0608 (Timer Function Off) - Stops the active timer function.
+:0608F2
+# =====================================================
+# Function :0604 (Pulse Width On - One-Pulse Mode, OPM) 
+# =====================================================
+# Test 1: OPM On - Delay=0x001E847F (1,999,999 ticks, ~2s delay @1MHz), Width=0x001E847F (1,999,999 ticks, ~2s pulse @1MHz) 
+:0604001E847F001E847FB4
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 2: OPM On - Delay=0x001E847F (1,999,999 ticks, ~2s delay @1MHz), Width=0x000F423F (999,999 ticks, ~1s pulse @1MHz)
+:0604001E847F000F423F45
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# Test 3: OPM On - Delay=0x001E847F (1,999,999 ticks, ~2s delay @1MHz), Width=0x0007A11F (499,999 ticks, ~0.5s pulse @1MHz)
+:0604001E847F0007A11F0E
+# Function :0608 (Timer Function Off) - Stops the active timer function. 
+:0608F2
+# =====================================================
+# Function :0605 (Pulse Frequency On) - Generates a single pulse at a specified frequency (50% duty). Stays on afterwards.
+# =====================================================
+# Test 1: Pulse Frequency On - Target Freq=0x00000001 (1 Hz)
+:060500000001F4
+# Function :0608 (Timer Function Off) - Stops the active timer function.
+:0608F2
+# Test 2: Pulse Frequency On - Target Freq=0x0000000A (10 Hz)
+:06050000000AEB
+# Function :0608 (Timer Function Off) - Stops the active timer function.
+:0608F2
+# Test 3: Pulse Frequency On - Target Freq=0x00000032 (50 Hz)
+:060500000032C3
+# Function :0608 (Timer Function Off) - Stops the active timer function.
+:0608F2
+# =====================================================
+# End of Device 6 tests
+# =====================================================

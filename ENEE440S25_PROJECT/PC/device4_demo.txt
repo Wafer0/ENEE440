@@ -1,0 +1,70 @@
+# Test Script - Device 4 DAC
+#
+# Note: The LED can be a poor indicator of the DAC's actual analog output.
+# An oscilloscope is recommended to verify correct DAC and periodic signal functionality.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+:0100FF 
+# =====================================================
+# Device 04: DAC, Trigger, and Waveform Functions
+# =====================================================
+# Function :0400 (Initialize DAC channel on PA5) 
+:0400FC 
+# =====================================================
+# Function :0401 (Set DAC output) 
+# Test 1: Set DAC output to maximum (0xFFF = 4095)
+:04010FFFED
+# Test 2: Set DAC output to zero (0x000 = 0)
+:04010000FB
+# Test 3: Set DAC output to half-scale (0x7FF = 2047)
+:040107FFF5
+# Test 4: Set DAC output to quarter-scale (0x400 = 1024)
+:04010400F7
+# Test 5: Set DAC output to eighth-scale (0x200 = 512)
+:04010200F9
+# =====================================================
+# Function :0402 (Start Periodic signal) & :0403 (Stop periodic signal) - Tested 5 times
+# Each :0402 call is followed by :0403 to stop the waveform.
+# --- Sequence 1 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0xFFFF
+:04020FFFFFFF0000FFFFF0 
+# Stop periodic signal
+:0403F9
+# --- Sequence 2 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0x8000 (half T1 duration for T2)
+:04020FFFFFFF000080006E 
+# Stop periodic signal
+:0403F9
+# --- Sequence 3 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x07FF (half VA), T2=0xFFFF
+:04020FFFFFFF07FFFFFFEA 
+# Stop periodic signal
+:0403F9
+# --- Sequence 4 (Repeat of Sequence 1's parameters for :0402) ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0xFFFF
+:04020FFFFFFF0000FFFFF0 
+# Stop periodic signal
+:0403F9
+# --- Sequence 5 (Repeat of Sequence 2's parameters for :0402) ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0x8000 (half T1 duration for T2)
+:04020FFFFFFF000080006E 
+# Stop periodic signal
+:0403F9
+# =====================================================
+# Function :0404 (EXTI0 Init on PA1)
+# The DAC output to specified voltage when PA1 gets triggered
+# Test 1: Trigger/EXTI Init (V = 0x0FFF)
+:04040FFFEA 
+# Test 2: Trigger/EXTI Init (V = 0x0000)
+:04040000F8 
+# Test 3: Trigger/EXTI Init (V = 0x07FF)
+:040407FFF2 
+# Test 4: Trigger/EXTI Init (V = 0x0000)
+:04040000F8 
+# Test 5: Trigger/EXTI Init (V = 0x0400)
+:04040400F4 
+# Final DAC output set to zero for a known state (good practice)
+:04010000FB # Set DAC output to zero (0x000 = 0)
+# End of test script

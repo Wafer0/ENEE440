@@ -1,0 +1,203 @@
+C:\Downloads\Project\PC>.\testterm.exe COM5 .\device4_demo.txt
+Starting testterm.exe
+See '_readme_testterm.txt' and 'test_script_demo.txt' for more info
+Attempting connection to target on \\.\COM5; testing with .\device4_demo.txt
+serial port \\.\COM5 is ready
+serial parameter settings successful
+       Baudrate = 115200
+       ByteSize = 8
+       StopBits = 0
+       Parity   = 0
+Serial timeout settings successful
+
+Script information messages starting with '#'  will display one line at a time
+Hit 'Enter' to advance to each next message or command operation
+IMPORTANT: in order to avoid disrupting operation of testterm you must wait for a
+'bytes received' message before proceeding with the next step in the script.
+
+Beginning test script '.\device4_demo.txt'
+# Test Script - Device 4 DAC
+#
+# Note: The LED can be a poor indicator of the DAC's actual analog output.
+# An oscilloscope is recommended to verify correct DAC and periodic signal functionality.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+        7 bytes sent.
+        txmsg= :0100FF
+
+        25 bytes received.
+        rxmsg= userLED is initialized
+
+# =====================================================
+# Device 04: DAC, Trigger, and Waveform Functions
+# =====================================================
+# Function :0400 (Initialize DAC channel on PA5)
+        7 bytes sent.
+        txmsg= :0400FC
+
+        31 bytes received.
+        rxmsg= device4 has been initialized
+
+# =====================================================
+# Function :0401 (Set DAC output)
+# Test 1: Set DAC output to maximum (0xFFF = 4095)
+        12 bytes sent.
+        txmsg= :04010FFFED
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# Test 2: Set DAC output to zero (0x000 = 0)
+        12 bytes sent.
+        txmsg= :04010000FB
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# Test 3: Set DAC output to half-scale (0x7FF = 2047)
+        12 bytes sent.
+        txmsg= :040107FFF5
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# Test 4: Set DAC output to quarter-scale (0x400 = 1024)
+        12 bytes sent.
+        txmsg= :04010400F7
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# Test 5: Set DAC output to eighth-scale (0x200 = 512)
+        12 bytes sent.
+        txmsg= :04010200F9
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# =====================================================
+# Function :0402 (Start Periodic signal) & :0403 (Stop periodic signal) - Tested 5 times
+# Each :0402 call is followed by :0403 to stop the waveform.
+# --- Sequence 1 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0xFFFF
+        23 bytes sent.
+        txmsg= :04020FFFFFFF0000FFFFF0
+
+        23 bytes received.
+        rxmsg= Voltage transitioned
+
+# Stop periodic signal
+        8 bytes sent.
+        txmsg= :0403F9
+
+        50 bytes received.
+        rxmsg= device4 has stopped outputing a periodic signal
+
+# --- Sequence 2 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0x8000 (half T1 duration for T2)
+        23 bytes sent.
+        txmsg= :04020FFFFFFF000080006E
+
+        23 bytes received.
+        rxmsg= Voltage transitioned
+
+# Stop periodic signal
+        8 bytes sent.
+        txmsg= :0403F9
+
+        50 bytes received.
+        rxmsg= device4 has stopped outputing a periodic signal
+
+# --- Sequence 3 ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x07FF (half VA), T2=0xFFFF
+        23 bytes sent.
+        txmsg= :04020FFFFFFF07FFFFFFEA
+
+        23 bytes received.
+        rxmsg= Voltage transitioned
+
+# Stop periodic signal
+        8 bytes sent.
+        txmsg= :0403F9
+
+        50 bytes received.
+        rxmsg= device4 has stopped outputing a periodic signal
+
+# --- Sequence 4 (Repeat of Sequence 1's parameters for :0402) ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0xFFFF
+        23 bytes sent.
+        txmsg= :04020FFFFFFF0000FFFFF0
+
+        23 bytes received.
+        rxmsg= Voltage transitioned
+
+# Stop periodic signal
+        8 bytes sent.
+        txmsg= :0403F9
+
+        50 bytes received.
+        rxmsg= device4 has stopped outputing a periodic signal
+
+# --- Sequence 5 (Repeat of Sequence 2's parameters for :0402) ---
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0x8000 (half T1 duration for T2)
+        23 bytes sent.
+        txmsg= :04020FFFFFFF000080006E
+
+        23 bytes received.
+        rxmsg= Voltage transitioned
+
+# Stop periodic signal
+        8 bytes sent.
+        txmsg= :0403F9
+
+        50 bytes received.
+        rxmsg= device4 has stopped outputing a periodic signal
+
+# =====================================================
+# Function :0404 (EXTI0 Init on PA1)
+# The DAC output to specified voltage when PA1 gets triggered
+# Test 1: Trigger/EXTI Init (V = 0x0FFF)
+        11 bytes sent.
+        txmsg= :04040FFFEA
+
+        33 bytes received.
+        rxmsg= device4 Trigger Enabled on PA1
+
+# Test 2: Trigger/EXTI Init (V = 0x0000)
+        11 bytes sent.
+        txmsg= :04040000F8
+
+        33 bytes received.
+        rxmsg= device4 Trigger Enabled on PA1
+
+# Test 3: Trigger/EXTI Init (V = 0x07FF)
+        11 bytes sent.
+        txmsg= :040407FFF2
+
+        33 bytes received.
+        rxmsg= device4 Trigger Enabled on PA1
+
+# Test 4: Trigger/EXTI Init (V = 0x0000)
+        11 bytes sent.
+        txmsg= :04040000F8
+
+        33 bytes received.
+        rxmsg= device4 Trigger Enabled on PA1
+
+# Test 5: Trigger/EXTI Init (V = 0x0400)
+        11 bytes sent.
+        txmsg= :04040400F4
+
+        33 bytes received.
+        rxmsg= device4 Trigger Enabled on PA1
+
+# Final DAC output set to zero for a known state (good practice)
+        11 bytes sent.
+        txmsg= :04010000FB
+
+        34 bytes received.
+        rxmsg= device4 set to constant voltage
+
+# End of test script

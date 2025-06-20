@@ -1,0 +1,60 @@
+# Test Script - Device 5 ADC
+#
+# Note: For ADC value reporting, connect a variable voltage source to PA0.
+# For threshold tests, connect PA0 to GND, 3.3V, or a specific voltage as prompted.
+# For EXTI1 tests, ensure PA1 can be triggered by connecting it to 3.3V.
+# An oscilloscope or multimeter on PA0 can help verify input voltages.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+:0100FF 
+# =====================================================
+# Device 05: ADC Functions
+# =====================================================
+# Function :0500 (Initialize ADC channel on PA0)
+:0500FB
+# =====================================================
+# Function :0501 (Report ADC Value)
+# Test 1: Report ADC Value. Connect PA0 to GND (expected near 0x000).
+:0501FA
+# Test 2: Report ADC Value. Connect PA0 to 3.3V (expected near 0xFFF).
+:0501FA
+# Test 3: Report ADC Value. Connect PA0 to GND (expected near 0x000).
+:0501FA
+# Test 4: Report ADC Value. Connect PA0 to 3.3V (expected near 0xFFF).
+:0501FA
+# =====================================================
+# Function :0502 (Report if ADC Value is Above/Below Thresholds)
+# Moving jumper cables is unreliable and often causes multiple 'print' outputs. 
+# This occurs because the physical connection isn't clean (bounces) during the transition between positions.
+# Test 1: Thresholds L=0x0100, H=0x0FAA. Connect PA0 to GND (0x000) execute cmd then to 3.3V (0xFFF). Expected: BELOW LIMIT.
+:050201000FAA3F
+# Stop Monitor Task / Clear Status Expected: ABOVE LIMIT
+:0503F8
+# Test 2: Thresholds L=0x0100, H=0x0FAA. Connect PA0 to 3.3V (0xFFF) execute cmd then to GND (0x000). Expected: ABOVE LIMIT.
+:050201000FAA3F
+# Stop Monitor Task / Clear Status Expected: BELOW LIMIT.
+:0503F8
+# Test 3: Thresholds L=0x0F00, H=0x0F10. Connect PA0 to 3.3V (0xFFF) execute cmd then to GND (0x000). Expected: ABOVE LIMIT.
+:05020F000F10CB
+# Stop Monitor Task / Clear Status Expected: BELOW LIMIT.
+:0503F8
+# Test 4: Thresholds L=0x0010, H=0x0020. Connect PA0 to GND (0x000) execute cmd then to 3.3V (0xFFF). Expected: BELOW LIMIT.
+:050200100020C9
+# Stop Monitor Task / Clear Status Expected: ABOVE LIMIT.
+:0503F8
+# =====================================================
+# Function :0504 (Initialize External Trigger EXTI1 on PA1)
+# Test 1: Initialize EXTI1. Trigger PA1, then stop.
+:0504F7
+# Test 2: Connect PA0 to 3.3V and Manually trigger PA1 here 5 Times
+# Stop Monitor Task / Clear Status / Report Triggered Result (if any)
+:0503F8 
+# Test 3: Connect PA0 to GND and Manually trigger PA1 here 3 Times
+# Report Triggered Result 
+:0503F8 
+# Test 4: Connect PA0 to 3.3V and Manually trigger PA1 here 1 Time
+# Report Triggered Result 
+:0503F8 
+# End of test script

@@ -1,0 +1,267 @@
+C:\Downloads\Project\PC> .\testterm.exe COM5 .\device3_demo.txt
+Starting testterm.exe
+See '_readme_testterm.txt' and 'test_script_demo.txt' for more info
+Attempting connection to target on \\.\COM5; testing with .\device3_demo.txt
+serial port \\.\COM5 is ready
+serial parameter settings successful
+       Baudrate = 115200
+       ByteSize = 8
+       StopBits = 0
+       Parity   = 0
+Serial timeout settings successful
+
+Script information messages starting with '#'  will display one line at a time
+Hit 'Enter' to advance to each next message or command operation
+IMPORTANT: in order to avoid disrupting operation of testterm you must wait for a
+'bytes received' message before proceeding with the next step in the script.
+
+Beginning test script '.\device3_demo.txt'
+# Test Script - Device 03 GPIO Input, Output, and EXTI
+#
+# Notes:
+# - For GPIO Input tests on Device 03 (PA8), ensure the pin
+#   is correctly connected as per test instructions (e.g., to 3.3V or GND).
+# - For some output tests, you may need to connect PA8 to PA5 to monitor
+#   the state of PA8 on an LED, as indicated in the relevant section.
+# - An oscilloscope might be useful for verifying precise timings for scheduled
+#   and repetitive output tests.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED)
+# Test 1: Initialize user LED (clears serial buffer, serves as a basic communication test).
+        8 bytes sent.
+        txmsg= :0100FF
+
+        25 bytes received.
+        rxmsg= userLED is initialized
+
+# =====================================================
+# Device 03: GPIO Input, Output, and EXTI Functions (Primarily PA8)
+# =====================================================
+# Function :0300 (Initialize Device 03)
+# Test 1: Initializes Device 03. Configures PA8 as input by default.
+        8 bytes sent.
+        txmsg= :0300FD
+
+        31 bytes received.
+        rxmsg= device3 has been initialized
+
+# =====================================================
+# Function :0305 (Read Immediate Input from PA8)
+# Note: For these tests, manually set PA8 to the specified level *before* sending the command.
+# Test 1: Manually set PA8 to HIGH (e.g., connect to 3.3V), then read.
+        8 bytes sent.
+        txmsg= :0305F8
+
+        16 bytes received.
+        rxmsg= Input is HIGH
+
+# Test 2: Manually set PA8 to LOW (e.g., connect to GND), then read.
+        8 bytes sent.
+        txmsg= :0305F8
+
+        15 bytes received.
+        rxmsg= Input is LOW
+
+# Test 3: Manually set PA8 to HIGH, then read.
+        8 bytes sent.
+        txmsg= :0305F8
+
+        16 bytes received.
+        rxmsg= Input is HIGH
+
+# Test 4: Manually set PA8 to LOW, then read.
+        8 bytes sent.
+        txmsg= :0305F8
+
+        15 bytes received.
+        rxmsg= Input is LOW
+
+# Test 5: Manually set PA8 to HIGH, then read.
+        8 bytes sent.
+        txmsg= :0305F8
+
+        16 bytes received.
+        rxmsg= Input is HIGH
+
+# =====================================================
+# Function :0306 (Read Scheduled Input from Device 03 pin PA8)
+# Note: Reads the state of PA8 after a specified delay.
+# Test 1: Set PA8 to 3.3V. Short delay (Data: 00FA = 256 units), then read PA8.
+        12 bytes sent.
+        txmsg= :030600FAFD
+
+        33 bytes received.
+        rxmsg= Waiting on PA8
+Input is HIGH
+
+# Test 2: Set PA8 to GND. Medium delay (Data: 01F4 = 500ms), then read PA8.
+        12 bytes sent.
+        txmsg= :030601F402
+
+        32 bytes received.
+        rxmsg= Waiting on PA8
+Input is LOW
+
+# Test 3: Set PA8 to 3.3V. Longer delay (Data: 03E8 = 1000ms), then read PA8.
+        12 bytes sent.
+        txmsg= :030603E80C
+
+        33 bytes received.
+        rxmsg= Waiting on PA8
+Input is HIGH
+
+# Test 4: Set PA8 to GND. 2-second delay (Data: 07D0 = 2000ms), then read PA8.
+        12 bytes sent.
+        txmsg= :030607D020
+
+        32 bytes received.
+        rxmsg= Waiting on PA8
+Input is LOW
+
+# Test 5: Set PA8 to 3.3V. 4-second delay (Data: 0FA0 = 4000ms), then read PA8.
+        12 bytes sent.
+        txmsg= :03060FA048
+
+        33 bytes received.
+        rxmsg= Waiting on PA8
+Input is HIGH
+
+# =====================================================
+# Function :0307 (Start Monitoring Input on Device 03 pin PA8)
+# Test 1: Configure PA8 for input monitoring. After sending this command,
+#         manually trigger a change on the input.
+# Before executing cmd set PA8 to GND and after executing move to 3.3V then to GND then to 3.3V.
+        8 bytes sent.
+        txmsg= :0307F6
+
+        2 bytes received.
+        rxmsg= Mo
+# =====================================================
+# Function :0309 (Read and Stop Monitor on PA8)
+# Test 1: Read the captured input change from the monitor (started by :0307) and stop monitoring.
+        8 bytes sent.
+        txmsg= :0309F4
+
+        163 bytes received.
+        rxmsg= nitor on PA8
+Change on PA8
+Input is LOW
+Change on PA8
+Input is HIGH
+Change on PA8
+Input is LOW
+Change on PA8
+Input is HIGH
+Monitor Has Stopped
+
+# =====================================================
+# Function :0308 (Initialize EXTI on PA1 for Device 03)
+# Test 1: Initialize EXTI on PA1. Manually trigger the EXTI event
+#         Put PA8 to 3.3V and Trigger PA1 two times.
+        8 bytes sent.
+        txmsg= :0308F5
+
+        17 bytes received.
+        rxmsg= Trigger on PA1
+
+# =====================================================
+# Function :030A (Read EXTI Trigger Results for PA8)
+# Test 1: Read results from the EXTI trigger (initiated by :0308).
+        8 bytes sent.
+        txmsg= :030AF3
+
+        54 bytes received.
+        rxmsg= Input is HIGH
+Input is HIGH
+Result from Trigger
+
+# =====================================================
+# GPIO Output Tests on PA8
+# Note: For this section, connect PA8 to PA5 to monitor the state of PA8 on the user LED.
+# The LED on PA5 will reflect the output state of PA8.
+# =====================================================
+# Function :0302 (Set PA8 Output High - Immediate)
+# Function :0301 (Set PA8 Output Low - Immediate)
+# Test 1: Set PA8 output to HIGH.
+        8 bytes sent.
+        txmsg= :0302FB
+
+        17 bytes received.
+        rxmsg= Output is HIGH
+
+# Test 2: Set PA8 output to LOW. (Repeated for clarity if needed in a sequence)
+        8 bytes sent.
+        txmsg= :0301FC
+
+        16 bytes received.
+        rxmsg= Output is LOW
+
+# Test 3: Set PA8 output to HIGH. (Repeated for clarity if needed in a sequence)
+        8 bytes sent.
+        txmsg= :0302FB
+
+        17 bytes received.
+        rxmsg= Output is HIGH
+
+# Test 4: Set PA8 output to LOW. (Repeated for clarity if needed in a sequence)
+        8 bytes sent.
+        txmsg= :0301FC
+
+        16 bytes received.
+        rxmsg= Output is LOW
+
+# =====================================================
+# Function :0303 (Set PA8 Output State with Delay)
+# Data format: <Delay_HighByte><Delay_LowByte><State_HighByte><State_LowByte> (State: 0001 for HIGH, 0000 for LOW)
+# Test 1: 0-second delay (0000 = 0ms), then set PA8 HIGH (0001).
+#         (LED connected to PA5 should turn ON after delay)
+        16 bytes sent.
+        txmsg= :030300000001F9
+
+        30 bytes received.
+        rxmsg= device3 scheduled a task on
+
+# Test 2: 4-second delay (0FA0 = 4000ms), then set PA8 LOW (0000).
+#         (LED connected to PA5 should turn OFF after delay)
+        16 bytes sent.
+        txmsg= :03030FA000004B
+
+        30 bytes received.
+        rxmsg= device3 scheduled a task on
+
+# Test 3: 0-second delay (0000 = 0ms), then set PA8 HIGH (0001).
+        16 bytes sent.
+        txmsg= :030300000001F9
+
+        30 bytes received.
+        rxmsg= device3 scheduled a task on
+
+# Test 4: 2-second delay (07D0 = 4000ms), then set PA8 LOW (0000).
+#         (LED connected to PA5 should turn OFF after delay)
+        16 bytes sent.
+        txmsg= :030307D0000023
+
+        30 bytes received.
+        rxmsg= device3 scheduled a task on
+
+# =====================================================
+# Function :0304 (Set PA8 Repetitive Output - Square Wave)
+# Data format: <Cycles_HighByte><Cycles_LowByte><TimeON_HighByte><TimeON_LowByte><TimeOFF_HighByte><TimeOFF_LowByte>
+# Test 1: 5 cycles (0005), 0.5 seconds ON (01F4 = 500ms), 0.5 seconds OFF (01F4 = 500ms).
+        20 bytes sent.
+        txmsg= :0304000501F401F40A
+
+        32 bytes received.
+        rxmsg= device3 repetitive mode is on
+
+# Test 2: 10 cycles (000A), 0.25 second ON (00FA = 250ms), 0.5 seconds OFF (01F4 = 500ms).
+        20 bytes sent.
+        txmsg= :0304000A00FA01F400
+
+        32 bytes received.
+        rxmsg= device3 repetitive mode is on
+
+# =====================================================
+# End of test script

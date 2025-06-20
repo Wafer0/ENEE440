@@ -1,0 +1,62 @@
+# Test Script - Device 8 W25QXX Flash Memory Storage
+#
+# This script tests the functionality of Device 8, which interfaces
+# with an external W25QXX series SPI Flash memory chip.
+# An oscilloscope or logic analyzer might be useful for observing SPI signals.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED, often used to clear serial buffer or indicate test start.
+:0100FF
+# =====================================================
+# Device 08: W25QXX Flash Memory Functions
+# =====================================================
+# Function :0800 (Initialize Flash Chip) - Resets and initializes the W25QXX flash memory chip and SPI2.
+:0800F8
+# =====================================================
+# Function :0801 (Read JEDEC ID) - Reads Manufacturer ID, Device Type ID, and Capacity ID.
+:0801F7
+# =====================================================
+# --- Test Sequence 1: Short Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector (typically 4KB) in flash memory. Address 0x000000.
+:0802F6
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into an internal RAM buffer.
+# Payload: 08 (count of data bytes) AABBCCDDEEFF1122 (data bytes)
+:080308AABBCCDDEEFF1122BF
+# Function :0804 (Copy RAM Buffer to Flash) - Writes the content of the RAM buffer to flash memory (address 0x000000).
+:0804F4
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+:0805F3
+# Function :0806 (Output Data from Flash) - Reads specified number of bytes from flash and outputs them.
+# Payload: 08 (number of bytes to read and output from flash address 0x000000)
+:080608EA
+# =====================================================
+# --- Test Sequence 2: Longer Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector in flash memory. Address 0x000000.
+:0802F6
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into RAM buffer.
+# Payload: 1A (26 data bytes) A3F9...F8AC (data bytes)
+:08031AA3F9C7E12B84D6A790EF13CD7BA8F2145D9C3A607B1E4D29F8AC9D
+# Function :0804 (Copy RAM Buffer to Flash) - Writes RAM buffer to flash.
+:0804F4
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+:0805F3
+# Function :0806 (Output Data from Flash) - Reads and outputs data from flash.
+# Payload: 1A (26 bytes to read and output)
+:08061AD8
+# =====================================================
+# --- Test Sequence 3: Single Byte Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector in flash memory. Address 0x000000.
+:0802F6
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into RAM buffer.
+# Payload: 01 (1 data byte) AC (data byte)
+:080301AC48
+# Function :0804 (Copy RAM Buffer to Flash) - Writes RAM buffer to flash.
+:0804F4
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+:0805F3
+# Function :0806 (Output Data from Flash) - Reads and outputs data from flash.
+# Payload: 01 (1 byte to read and output)
+:080601F1
+# =====================================================
+# End of test script

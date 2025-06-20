@@ -1,0 +1,190 @@
+C:\Downloads\Project\PC> .\testterm.exe COM5 .\device5_demo.txt
+Starting testterm.exe
+See '_readme_testterm.txt' and 'test_script_demo.txt' for more info
+Attempting connection to target on \\.\COM5; testing with .\device5_demo.txt
+serial port \\.\COM5 is ready
+serial parameter settings successful
+       Baudrate = 115200
+       ByteSize = 8
+       StopBits = 0
+       Parity   = 0
+Serial timeout settings successful
+
+Script information messages starting with '#'  will display one line at a time
+Hit 'Enter' to advance to each next message or command operation
+IMPORTANT: in order to avoid disrupting operation of testterm you must wait for a
+'bytes received' message before proceeding with the next step in the script.
+
+Beginning test script '.\device5_demo.txt'
+# Test Script - Device 5 ADC
+#
+# Note: For ADC value reporting, connect a variable voltage source to PA0.
+# For threshold tests, connect PA0 to GND, 3.3V, or a specific voltage as prompted.
+# For EXTI1 tests, ensure PA1 can be triggered by connecting it to 3.3V.
+# An oscilloscope or multimeter on PA0 can help verify input voltages.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+        7 bytes sent.
+        txmsg= :0100FF
+
+        25 bytes received.
+        rxmsg= userLED is initialized
+
+# =====================================================
+# Device 05: ADC Functions
+# =====================================================
+# Function :0500 (Initialize ADC channel on PA0)
+        8 bytes sent.
+        txmsg= :0500FB
+
+        31 bytes received.
+        rxmsg= device5 has been initialized
+
+# =====================================================
+# Function :0501 (Report ADC Value)
+# Test 1: Report ADC Value. Connect PA0 to GND (expected near 0x000).
+        8 bytes sent.
+        txmsg= :0501FA
+
+        40 bytes received.
+        rxmsg= Output Vx from ADC              0x000
+
+# Test 2: Report ADC Value. Connect PA0 to 3.3V (expected near 0xFFF).
+        8 bytes sent.
+        txmsg= :0501FA
+
+        40 bytes received.
+        rxmsg= Output Vx from ADC              0xFFF
+
+# Test 3: Report ADC Value. Connect PA0 to GND (expected near 0x000).
+        8 bytes sent.
+        txmsg= :0501FA
+
+        40 bytes received.
+        rxmsg= Output Vx from ADC              0x000
+
+# Test 4: Report ADC Value. Connect PA0 to 3.3V (expected near 0xFFF).
+        8 bytes sent.
+        txmsg= :0501FA
+
+        40 bytes received.
+        rxmsg= Output Vx from ADC              0xFFF
+# =====================================================
+# Function :0502 (Report if ADC Value is Above/Below Thresholds)
+# Moving jumper cables is unreliable and often causes multiple 'print' outputs.
+# This occurs because the physical connection isn't clean (bounces) during the transition between positions.
+# Test 1: Thresholds L=0x0100, H=0x0FAA. Connect PA0 to GND (0x000) execute cmd then to 3.3V (0xFFF). Expected: BELOW LIMIT.
+        16 bytes sent.
+        txmsg= :050201000FAA3F
+
+        40 bytes received.
+        rxmsg= ADC Range Monitor is On
+BELOW LIMIT
+
+# Stop Monitor Task / Clear Status Expected: ABOVE LIMIT
+        8 bytes sent.
+        txmsg= :0503F8
+
+        64 bytes received.
+        rxmsg= ABOVE LIMIT
+BELOW LIMIT
+ABOVE LIMIT
+Monitor Has Stopped
+
+# Test 2: Thresholds L=0x0100, H=0x0FAA. Connect PA0 to 3.3V (0xFFF) execute cmd then to GND (0x000). Expected: ABOVE LIMIT.
+        16 bytes sent.
+        txmsg= :050201000FAA3F
+
+        40 bytes received.
+        rxmsg= ADC Range Monitor is On
+ABOVE LIMIT
+
+# Stop Monitor Task / Clear Status Expected: BELOW LIMIT.
+        8 bytes sent.
+        txmsg= :0503F8
+
+        36 bytes received.
+        rxmsg= BELOW LIMIT
+Monitor Has Stopped
+
+# Test 3: Thresholds L=0x0F00, H=0x0F10. Connect PA0 to 3.3V (0xFFF) execute cmd then to GND (0x000). Expected: ABOVE LIMIT.
+        16 bytes sent.
+        txmsg= :05020F000F10CB
+
+        40 bytes received.
+        rxmsg= ADC Range Monitor is On
+ABOVE LIMIT
+
+# Stop Monitor Task / Clear Status Expected: BELOW LIMIT.
+        8 bytes sent.
+        txmsg= :0503F8
+
+        36 bytes received.
+        rxmsg= BELOW LIMIT
+Monitor Has Stopped
+
+# Test 4: Thresholds L=0x0010, H=0x0020. Connect PA0 to GND (0x000) execute cmd then to 3.3V (0xFFF). Expected: BELOW LIMIT.
+        16 bytes sent.
+        txmsg= :050200100020C9
+
+        40 bytes received.
+        rxmsg= ADC Range Monitor is On
+BELOW LIMIT
+
+# Stop Monitor Task / Clear Status Expected: ABOVE LIMIT.
+        8 bytes sent.
+        txmsg= :0503F8
+
+        36 bytes received.
+        rxmsg= ABOVE LIMIT
+Monitor Has Stopped
+# =====================================================
+# Function :0504 (Initialize External Trigger EXTI1 on PA1)
+# Test 1: Initialize EXTI1. Trigger PA1, then stop.
+        8 bytes sent.
+        txmsg= :0504F7
+
+        33 bytes received.
+        rxmsg= device5 Trigger Enabled on PA1
+
+# Test 2: Connect PA0 to 3.3V and Manually trigger PA1 here 5 Times
+# Stop Monitor Task / Clear Status / Report Triggered Result (if any)
+        7 bytes sent.
+        txmsg= :0503F8
+
+        342 bytes received.
+        rxmsg= Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Output Vx from ADC              0xFFF
+Monitor Has Stopped
+
+# Test 3: Connect PA0 to GND and Manually trigger PA1 here 3 Times
+# Report Triggered Result
+        7 bytes sent.
+        txmsg= :0503F8
+
+        182 bytes received.
+        rxmsg= Output Vx from ADC              0x000
+Output Vx from ADC              0x000
+Output Vx from ADC              0x000
+Output Vx from ADC              0x000
+Monitor Has Stopped
+
+# Test 4: Connect PA0 to 3.3V and Manually trigger PA1 here 1 Time
+# Report Triggered Result
+        7 bytes sent.
+        txmsg= :0503F8
+
+        62 bytes received.
+        rxmsg= Output Vx from ADC              0xFFF
+Monitor Has Stopped
+
+# End of test script
+

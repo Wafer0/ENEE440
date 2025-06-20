@@ -1,0 +1,170 @@
+C:\Downloads\Project\PC> .\testterm.exe COM5 .\device8_demo.txt
+Starting testterm.exe
+See '_readme_testterm.txt' and 'test_script_demo.txt' for more info
+Attempting connection to target on \\.\COM5; testing with .\device8_demo.txt
+serial port \\.\COM5 is ready
+serial parameter settings successful
+       Baudrate = 115200
+       ByteSize = 8
+       StopBits = 0
+       Parity   = 0
+Serial timeout settings successful
+
+Script information messages starting with '#'  will display one line at a time
+Hit 'Enter' to advance to each next message or command operation
+IMPORTANT: in order to avoid disrupting operation of testterm you must wait for a
+'bytes received' message before proceeding with the next step in the script.
+
+Beginning test script '.\device8_demo.txt'
+# Test Script - Device 8 W25QXX Flash Memory Storage
+#
+# This script tests the functionality of Device 8, which interfaces
+# with an external W25QXX series SPI Flash memory chip.
+# An oscilloscope or logic analyzer might be useful for observing SPI signals.
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED, often used to clear serial buffer or indicate test start.
+        8 bytes sent.
+        txmsg= :0100FF
+
+        25 bytes received.
+        rxmsg= userLED is initialized
+
+# =====================================================
+# Device 08: W25QXX Flash Memory Functions
+# =====================================================
+# Function :0800 (Initialize Flash Chip) - Resets and initializes the W25QXX flash memory chip and SPI2.
+        8 bytes sent.
+        txmsg= :0800F8
+
+        42 bytes received.
+        rxmsg= device8 has been initialized on W25Q128
+
+# =====================================================
+# Function :0801 (Read JEDEC ID) - Reads Manufacturer ID, Device Type ID, and Capacity ID.
+        8 bytes sent.
+        txmsg= :0801F7
+
+        46 bytes received.
+        rxmsg= device8 JEDEC: MF=0xEF, Type=0x40, Cap=0x18
+
+# =====================================================
+# --- Test Sequence 1: Short Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector (typically 4KB) in flash memory. Address 0x000000.
+        8 bytes sent.
+        txmsg= :0802F6
+
+        32 bytes received.
+        rxmsg= device8 erased directed block
+
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into an internal RAM buffer.
+# Payload: 08 (count of data bytes) AABBCCDDEEFF1122 (data bytes)
+        26 bytes sent.
+        txmsg= :080308AABBCCDDEEFF1122BF
+
+        26 bytes received.
+        rxmsg= device8 input is in ram
+
+# Function :0804 (Copy RAM Buffer to Flash) - Writes the content of the RAM buffer to flash memory (address 0x000000).
+        8 bytes sent.
+        txmsg= :0804F4
+
+        24 bytes received.
+        rxmsg= device8 copy complete
+
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+        8 bytes sent.
+        txmsg= :0805F3
+
+        34 bytes received.
+        rxmsg= device8 verification successful
+
+# Function :0806 (Output Data from Flash) - Reads specified number of bytes from flash and outputs them.
+# Payload: 08 (number of bytes to read and output from flash address 0x000000)
+        10 bytes sent.
+        txmsg= :080608EA
+
+        95 bytes received.
+        rxmsg= device8 output from flash 0xAABBCCDDEEFF1122000000000000000000000000000000000000000000000000
+
+# =====================================================
+# --- Test Sequence 2: Longer Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector in flash memory. Address 0x000000.
+        8 bytes sent.
+        txmsg= :0802F6
+
+        32 bytes received.
+        rxmsg= device8 erased directed block
+
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into RAM buffer.
+# Payload: 1A (26 data bytes) A3F9...F8AC (data bytes)
+        62 bytes sent.
+        txmsg= :08031AA3F9C7E12B84D6A790EF13CD7BA8F2145D9C3A607B1E4D29F8AC9D
+
+        26 bytes received.
+        rxmsg= device8 input is in ram
+
+# Function :0804 (Copy RAM Buffer to Flash) - Writes RAM buffer to flash.
+        8 bytes sent.
+        txmsg= :0804F4
+
+        24 bytes received.
+        rxmsg= device8 copy complete
+
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+        8 bytes sent.
+        txmsg= :0805F3
+
+        34 bytes received.
+        rxmsg= device8 verification successful
+
+# Function :0806 (Output Data from Flash) - Reads and outputs data from flash.
+# Payload: 1A (26 bytes to read and output)
+        10 bytes sent.
+        txmsg= :08061AD8
+
+        95 bytes received.
+        rxmsg= device8 output from flash 0xA3F9C7E12B84D6A790EF13CD7BA8F2145D9C3A607B1E4D29F8AC000000000000
+
+# =====================================================
+# --- Test Sequence 3: Single Byte Data Pattern ---
+# Function :0802 (Erase Sector) - Erases a sector in flash memory. Address 0x000000.
+        8 bytes sent.
+        txmsg= :0802F6
+
+        32 bytes received.
+        rxmsg= device8 erased directed block
+
+# Function :0803 (Input Data to RAM Buffer) - Loads specified data bytes into RAM buffer.
+# Payload: 01 (1 data byte) AC (data byte)
+        12 bytes sent.
+        txmsg= :080301AC48
+
+        26 bytes received.
+        rxmsg= device8 input is in ram
+
+# Function :0804 (Copy RAM Buffer to Flash) - Writes RAM buffer to flash.
+        8 bytes sent.
+        txmsg= :0804F4
+
+        24 bytes received.
+        rxmsg= device8 copy complete
+
+# Function :0805 (Verify Flash against RAM Buffer) - Compares flash content with RAM buffer.
+        8 bytes sent.
+        txmsg= :0805F3
+
+        34 bytes received.
+        rxmsg= device8 verification successful
+
+# Function :0806 (Output Data from Flash) - Reads and outputs data from flash.
+# Payload: 01 (1 byte to read and output)
+        10 bytes sent.
+        txmsg= :080601F1
+
+        95 bytes received.
+        rxmsg= device8 output from flash 0xAC00000000000000000000000000000000000000000000000000000000000000
+
+# =====================================================
+# End of test script

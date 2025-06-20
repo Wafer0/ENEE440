@@ -1,0 +1,111 @@
+C:\Downloads\Project\PC> .\testterm.exe COM5 .\device7_demo.txt
+Starting testterm.exe
+See '_readme_testterm.txt' and 'test_script_demo.txt' for more info
+Attempting connection to target on \\.\COM5; testing with .\device7_demo.txt
+serial port \\.\COM5 is ready
+serial parameter settings successful
+       Baudrate = 115200
+       ByteSize = 8
+       StopBits = 0
+       Parity   = 0
+Serial timeout settings successful
+
+Script information messages starting with '#'  will display one line at a time
+Hit 'Enter' to advance to each next message or command operation
+IMPORTANT: in order to avoid disrupting operation of testterm you must wait for a
+'bytes received' message before proceeding with the next step in the script.
+
+Beginning test script '.\device7_demo.txt'
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED, to clear a serial buffer
+        8 bytes sent.
+        txmsg= :0100FF
+
+        25 bytes received.
+        rxmsg= userLED is initialized
+
+# =====================================================
+# Device 07: SPI Communication Functions
+# =====================================================
+# Function :0700 (Initialize SPI) - Prepare the SPI interface for communication.
+        8 bytes sent.
+        txmsg= :0700F9
+
+        37 bytes received.
+        rxmsg= device7: SPI2 initialized (PB12-15)
+
+# -----------------------------------------------------
+# SPI Test Sequence 1: Write 10 bytes, Read, and Clear Buffers
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=0A (10) bytes: [AA, BB, CC, DD, EE, FF, 11, 22, 33, 44]
+        30 bytes sent.
+        txmsg= :07010AAABBCCDDEEFF1122334449
+
+        30 bytes received.
+        rxmsg= device7: SPI2 write complete
+
+# Function :0702 (SPI Read) - Read data from SPI. Expected data might depend on the specific device and previous write.
+        8 bytes sent.
+        txmsg= :0702F7
+
+        33 bytes received.
+        rxmsg= device7: 0xAABBCCDDEEFF11223344
+
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+        8 bytes sent.
+        txmsg= :0703F6
+
+        39 bytes received.
+        rxmsg= device7: Read and Write Buffers CLEAR
+
+# -----------------------------------------------------
+# SPI Test Sequence 2: Write 6 bytes, Read, and Clear Buffers
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=6 bytes: [AA, BB, CC, DD, EE, FF]
+        22 bytes sent.
+        txmsg= :070106AABBCCDDEEFFF7
+
+        30 bytes received.
+        rxmsg= device7: SPI2 write complete
+
+# Function :0702 (SPI Read) - Read data from SPI.
+        8 bytes sent.
+        txmsg= :0702F7
+
+        33 bytes received.
+        rxmsg= device7: 0xAABBCCDDEEFF00000000
+
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+        8 bytes sent.
+        txmsg= :0703F6
+
+        39 bytes received.
+        rxmsg= device7: Read and Write Buffers CLEAR
+
+# -----------------------------------------------------
+# SPI Test Sequence 3: Write 4 bytes and Read
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=4 bytes: [11, 22, 33, 44]
+        18 bytes sent.
+        txmsg= :070104112233444A
+
+        30 bytes received.
+        rxmsg= device7: SPI2 write complete
+
+# Function :0702 (SPI Read) - Read data from SPI.
+        8 bytes sent.
+        txmsg= :0702F7
+
+        33 bytes received.
+        rxmsg= device7: 0x11223344000000000000
+
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+        8 bytes sent.
+        txmsg= :0703F6
+
+        39 bytes received.
+        rxmsg= device7: Read and Write Buffers CLEAR
+
+# End of script

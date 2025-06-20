@@ -1,0 +1,18 @@
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED to clear the serial buffer (test)
+:0100FF 
+# =====================================================
+# Device 04: DAC, Trigger, and Waveform Functions
+# =====================================================
+# Function :0400 (Initialize DAC channel on PA5) 
+:0400FC 
+# Periodic: VA=0x0FFF (max), T1=0xFFFF, VB=0x0000 (min), T2=0xFFFF
+:04020FFFFFFF0000FFFFF0 
+# Timer Init
+:060DED
+# pw
+:0609F1
+# pf
+:060AF0

@@ -1,0 +1,38 @@
+# =====================================================
+# Device 01: User LED Functions
+# =====================================================
+# Function :0100 (Initialize user LED) - Initialize user LED, to clear a serial buffer
+:0100FF
+# =====================================================
+# Device 07: SPI Communication Functions
+# =====================================================
+# Function :0700 (Initialize SPI) - Prepare the SPI interface for communication.
+:0700F9
+# -----------------------------------------------------
+# SPI Test Sequence 1: Write 10 bytes, Read, and Clear Buffers
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=0A (10) bytes: [AA, BB, CC, DD, EE, FF, 11, 22, 33, 44]
+:07010AAABBCCDDEEFF1122334449
+# Function :0702 (SPI Read) - Read data from SPI. Expected data might depend on the specific device and previous write.
+:0702F7
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+:0703F6
+# -----------------------------------------------------
+# SPI Test Sequence 2: Write 6 bytes, Read, and Clear Buffers
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=6 bytes: [AA, BB, CC, DD, EE, FF]
+:070106AABBCCDDEEFFF7
+# Function :0702 (SPI Read) - Read data from SPI.
+:0702F7
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+:0703F6
+# -----------------------------------------------------
+# SPI Test Sequence 3: Write 4 bytes and Read
+# -----------------------------------------------------
+# Function :0701 (SPI Write) - Write n=4 bytes: [11, 22, 33, 44]
+:070104112233444A
+# Function :0702 (SPI Read) - Read data from SPI.
+:0702F7
+# Function :0703 (Clear Buffers) - Clear SPI Read and Write Buffers.
+:0703F6
+# End of script
